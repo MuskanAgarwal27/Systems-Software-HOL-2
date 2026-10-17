@@ -1,0 +1,27 @@
+#include <stdio.h>
+#include <pthread.h>
+void *work(void *arg)
+{
+    printf("Thread %d running, its ID is %lu\n", *(int *)arg, pthread_self());
+    return NULL;
+}
+int main(void)
+{
+    pthread_t tid[3];
+    int num[3] = {1, 2, 3};
+    for (int i = 0; i < 3; i++)
+        pthread_create(&tid[i], NULL, work, &num[i]);
+    for (int i = 0; i < 3; i++) {
+        pthread_join(tid[i], NULL);
+        printf("Main: created thread %d had ID %lu\n", num[i], tid[i]);
+    }
+    return 0;
+}
+/*Output:
+Thread 2 running, its ID is 136617702450880
+Thread 1 running, its ID is 136617710843584
+Thread 3 running, its ID is 136617694058176
+Main: created thread 1 had ID 136617710843584
+Main: created thread 2 had ID 136617702450880
+Main: created thread 3 had ID 136617694058176
+*/
